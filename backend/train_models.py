@@ -41,7 +41,10 @@ from sklearn.metrics import (
 )
 import joblib
 
-from backend.preprocessing import load_dataset, STANDARD_POLLUTANTS, resolve_dataset_path
+try:
+    from backend.preprocessing import load_dataset, STANDARD_POLLUTANTS, resolve_dataset_path
+except ImportError:
+    from preprocessing import load_dataset, STANDARD_POLLUTANTS, resolve_dataset_path
 
 RANDOM_STATE = 42
 BASE_DIR = Path(__file__).resolve().parent.parent

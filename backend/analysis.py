@@ -19,7 +19,10 @@ matplotlib.use("Agg")
 import matplotlib.pyplot as plt
 import seaborn as sns
 
-from backend.preprocessing import load_dataset, STANDARD_POLLUTANTS, STANDARD_AQI_COLS, resolve_dataset_path
+try:
+    from backend.preprocessing import load_dataset, STANDARD_POLLUTANTS, STANDARD_AQI_COLS, resolve_dataset_path
+except ImportError:
+    from preprocessing import load_dataset, STANDARD_POLLUTANTS, STANDARD_AQI_COLS, resolve_dataset_path
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 OUTPUTS_DIR = BASE_DIR / "backend" / "outputs"
