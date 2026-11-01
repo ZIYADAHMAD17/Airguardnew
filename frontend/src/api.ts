@@ -10,7 +10,9 @@ import {
   ClassificationResult
 } from './types';
 
-const BASE_URL = import.meta.env.VITE_API_BASE_URL || '/api';
+// Normalize base URL so trailing slash or missing /api is handled cleanly
+const rawBaseUrl = (import.meta.env.VITE_API_BASE_URL || '/api').trim().replace(/\/+$/, '');
+const BASE_URL = rawBaseUrl.endsWith('/api') ? rawBaseUrl : (rawBaseUrl === '' ? '/api' : `${rawBaseUrl}/api`);
 
 async function handleResponse<T>(res: Response): Promise<T> {
   if (!res.ok) {
