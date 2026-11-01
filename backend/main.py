@@ -5,31 +5,55 @@ real-time regression predictions, and air quality classification endpoints.
 """
 
 from __future__ import annotations
+import sys
 import os
 import json
 import logging
 from pathlib import Path
 from typing import Optional, Dict, Any, List
 
+# Ensure project root and backend dir are in sys.path for Vercel and local runs
+CURRENT_DIR = Path(__file__).resolve().parent
+PROJECT_ROOT = CURRENT_DIR.parent
+for p in [str(PROJECT_ROOT), str(CURRENT_DIR)]:
+    if p not in sys.path:
+        sys.path.insert(0, p)
+
 from fastapi import FastAPI, HTTPException, UploadFile, File, Query, BackgroundTasks, status
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel, Field
 
-from backend.preprocessing import (
-    list_csv_files,
-    resolve_dataset_path,
-    load_dataset,
-    get_dataset_summary_dict,
-    get_paginated_readings,
-    save_uploaded_csv,
-    set_active_dataset_filename,
-    get_active_dataset_filename,
-    DATA_DIR
-)
-from backend.analysis import run_full_analysis
-from backend.train_models import run_all_training
-from backend.predict import get_model_status, predict_pm25, classify_aqi
+try:
+    from backend.preprocessing import (
+        list_csv_files,
+        resolve_dataset_path,
+        load_dataset,
+        get_dataset_summary_dict,
+        get_paginated_readings,
+        save_uploaded_csv,
+        set_active_dataset_filename,
+        get_active_dataset_filename,
+        DATA_DIR
+    )
+    from backend.analysis import run_full_analysis
+    from backend.train_models import run_all_training
+    from backend.predict import get_model_status, predict_pm25, classify_aqi
+except ImportError:
+    from preprocessing import (
+        list_csv_files,
+        resolve_dataset_path,
+        load_dataset,
+        get_dataset_summary_dict,
+        get_paginated_readings,
+        save_uploaded_csv,
+        set_active_dataset_filename,
+        get_active_dataset_filename,
+        DATA_DIR
+    )
+    from analysis import run_full_analysis
+    from train_models import run_all_training
+    from predict import get_model_status, predict_pm25, classify_aqi
 
 logging.basicConfig(level=logging.INFO, format="%(asctime)s [%(levelname)s] %(message)s")
 logger = logging.getLogger("AirGuard")
